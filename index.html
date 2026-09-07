@@ -82,7 +82,7 @@
   .tip-banner{ margin: 10px 20px 4px; background: var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:13.5px; line-height:1.5; display:flex; gap:10px; align-items:flex-start; color: var(--ink-soft); }
   .tip-banner button{ background:none; border:none; color:var(--ink-soft); font-size:18px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
 
-  main{ flex:1; padding: 4px 20px 100px; overflow-y:auto; }
+  main{ flex:1; padding: 4px 20px 84px; overflow-y:auto; }
   .view{ display:none; }
   .view.active{ display:block; animation: fadein .2s ease; }
   @keyframes fadein{ from{opacity:0} to{opacity:1} }
@@ -107,6 +107,17 @@
   .cat-header-plain{ font-size:13px; color:var(--ink-soft); font-weight:600; margin:18px 0 4px; }
   .cat-header-plain:first-child{ margin-top:6px; }
 
+  .home-stat-card{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:24px 16px; text-align:center; margin:18px 0 22px; }
+  .home-stat-number{ font-size:34px; font-weight:700; color:var(--rose); }
+  .home-stat-label{ font-size:13px; color:var(--ink-soft); margin-top:4px; }
+  .home-nav-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .home-nav-card{ display:flex; flex-direction:column; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px 10px; color:var(--ink); font-size:14px; cursor:pointer; }
+  .home-nav-card svg{ width:24px; height:24px; color:var(--rose); }
+  .fun-fact-card{ margin-top:22px; padding:14px 16px; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+  .fun-fact-label{ font-size:12px; color:var(--lavender); font-weight:600; margin-bottom:4px; }
+  .fun-fact-text{ font-size:14px; color:var(--ink); line-height:1.5; }
+  .fun-fact-link{ display:inline-block; margin-top:8px; font-size:12.5px; color:var(--rose); font-weight:600; text-decoration:none; }
+
   .empty-state{ padding: 44px 10px; text-align:center; color: var(--ink-soft); line-height:1.6; }
   .empty-state button{ margin-top:12px; background:none; border:1px solid var(--ink-soft); color:var(--ink); border-radius:20px; padding:9px 20px; font-size:14px; cursor:pointer; }
 
@@ -119,6 +130,7 @@
   .mood-chips{ display:flex; flex-wrap:wrap; gap:8px; }
   .mood-chip{ display:flex; align-items:center; gap:6px; border:1px solid var(--line); background:var(--surface); border-radius:20px; padding:8px 14px; font-size:14px; color:var(--ink-soft); cursor:pointer; }
   .mood-chip.selected{ background:var(--rose); border-color:var(--rose); color:#fff; }
+  .mood-chip-add{ border-style:dashed; color:var(--rose); border-color:var(--rose); background:none; }
   .mood-emoji{ font-size:16px; }
 
   .positives{ display:flex; flex-direction:column; gap:8px; }
@@ -216,10 +228,10 @@
   .help-text{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; }
   .muted{ color:var(--ink-soft); font-size:14px; }
 
-  nav.tabbar{ position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; background: var(--surface); border-top:1px solid var(--line); padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); max-width:480px; margin:0 auto; }
-  .tab-btn{ background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px; color: var(--ink-soft); font-size:11px; padding:2px 10px; cursor:pointer; }
-  .tab-icon-wrap{ display:flex; align-items:center; justify-content:center; width:42px; height:32px; border-radius:16px; transition: background-color .2s ease; }
-  .tab-btn svg{ width:22px; height:22px; transition: transform .15s ease; }
+  nav.tabbar{ position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; background: var(--surface); border-top:1px solid var(--line); padding: 6px 0 calc(6px + env(safe-area-inset-bottom)); max-width:480px; margin:0 auto; }
+  .tab-btn{ background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; color: var(--ink-soft); font-size:9.5px; padding:1px 3px; cursor:pointer; }
+  .tab-icon-wrap{ display:flex; align-items:center; justify-content:center; width:34px; height:26px; border-radius:13px; transition: background-color .2s ease; }
+  .tab-btn svg{ width:19px; height:19px; transition: transform .15s ease; }
   .tab-btn.active{ color: var(--rose); font-weight:600; }
   .tab-btn.active .tab-icon-wrap{ background: var(--rose-soft); }
   .tab-btn.active svg{ transform: scale(1.06); }
@@ -241,13 +253,38 @@
     </button>
   </header>
 
-  <div class="tip-banner" id="tipBanner" hidden>
-    <span>Astuce&nbsp;: ajoute ce carnet à ton écran d'accueil pour l'ouvrir comme une app. iPhone&nbsp;: Partager → « Sur l'écran d'accueil ». Android&nbsp;: menu ⋮ → « Ajouter à l'écran d'accueil ».</span>
-    <button id="tipClose" aria-label="Fermer">×</button>
-  </div>
-
   <main>
-    <section class="view active" id="view-habits">
+    <section class="view active" id="view-home">
+      <div class="home-stat-card">
+        <div class="home-stat-number" id="homeStatNumber">—</div>
+        <div class="home-stat-label" id="homeStatLabel">habitudes faites aujourd'hui</div>
+      </div>
+      <div class="home-nav-grid">
+        <button class="home-nav-card" data-goto="habits" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.3 2.3L16 9.5"/></svg>
+          Habitudes
+        </button>
+        <button class="home-nav-card" data-goto="journal" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10a2.5 2.5 0 0 0-3.5-3.5L4 16v4z"/><path d="M13.2 7.3l3.5 3.5"/></svg>
+          Journal
+        </button>
+        <button class="home-nav-card" data-goto="todo" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h4M4 12h4M4 18h4"/><path d="M11 6h9M11 12h9M11 18h9"/></svg>
+          To do
+        </button>
+        <button class="home-nav-card" data-goto="recap" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="17" rx="1"/></svg>
+          Bilan
+        </button>
+      </div>
+      <div class="fun-fact-card">
+        <div class="fun-fact-label">Le savais-tu ?</div>
+        <div class="fun-fact-text" id="funFactText"></div>
+        <a class="fun-fact-link" id="funFactLink" href="#" target="_blank" rel="noopener">En savoir plus →</a>
+      </div>
+    </section>
+
+    <section class="view" id="view-habits">
       <div class="empty-state" id="habitsEmpty" hidden>
         Pas encore d'habitude suivie.
         <br>
@@ -357,7 +394,11 @@
   </main>
 
   <nav class="tabbar">
-    <button class="tab-btn active" data-view="habits" type="button">
+    <button class="tab-btn active" data-view="home" type="button">
+      <span class="tab-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5L12 5l8 6.5"/><path d="M6 10v9h12v-9"/></svg></span>
+      Accueil
+    </button>
+    <button class="tab-btn" data-view="habits" type="button">
       <span class="tab-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.3 2.3L16 9.5"/></svg></span>
       Habitudes
     </button>
@@ -385,7 +426,6 @@
   "use strict";
 
   var STORAGE_KEY = 'carnet_data_v1';
-  var TIP_KEY = 'carnet_tip_seen';
   var EXPORT_KEY = 'carnet_last_export';
 
   var MOODS = [
@@ -427,6 +467,202 @@
     "Petit à petit, tu construis quelque chose de solide.",
     "Tu as déjà surmonté des jours plus durs que celui-ci."
   ];
+
+  var FUN_FACTS = [
+    ["Les poulpes ont trois cœurs et le sang bleu.", "Poulpe"],
+    ["Le miel ne périme jamais — on en a retrouvé de comestible dans des tombes égyptiennes vieilles de 3000 ans.", "Miel"],
+    ["Les flamants roses naissent gris — leur couleur vient de leur alimentation.", "Flamant rose"],
+    ["Le cœur de la crevette se trouve dans sa tête.", "Crevette"],
+    ["Certains escargots peuvent hiberner jusqu'à trois ans.", "Escargot"],
+    ["Les empreintes de koala ressemblent presque à s'y méprendre à des empreintes humaines.", "Koala"],
+    ["Les chats dorment en moyenne environ 70% de leur vie.", "Chat"],
+    ["La truffe d'un chien est unique, comme une empreinte digitale.", "Chien"],
+    ["Les requins existaient déjà sur Terre avant les arbres.", "Requin"],
+    ["Le cœur d'une baleine bleue pèse à peu près autant qu'une petite voiture.", "Baleine bleue"],
+    ["Les étoiles de mer n'ont pas de cerveau.", "Étoile de mer"],
+    ["Chez l'hippocampe, c'est le mâle qui porte les œufs et donne naissance aux petits.", "Hippocampe (poisson)"],
+    ["Les manchots empereurs peuvent plonger à plus de 500 mètres de profondeur.", "Manchot empereur"],
+    ["Le panda géant passe environ 12 heures par jour à manger du bambou.", "Panda géant"],
+    ["La girafe a le même nombre de vertèbres cervicales qu'un être humain, soit sept.", "Girafe"],
+    ["Le kangourou ne peut pas marcher en arrière.", "Kangourou"],
+    ["Le caméléon change surtout de couleur pour communiquer, pas seulement pour se camoufler.", "Caméléon"],
+    ["Le colibri est le seul oiseau capable de voler en marche arrière.", "Colibri"],
+    ["Une espèce de méduse est capable de revenir à un stade juvénile, ce qui la rend quasi immortelle.", "Méduse (animal)"],
+    ["L'ours polaire a la peau noire sous sa fourrure blanche.", "Ours polaire"],
+    ["L'éléphant est incapable de sauter.", "Éléphant"],
+    ["La chauve-souris est le seul mammifère capable de voler activement.", "Chauve-souris"],
+    ["La peau du tigre est rayée, pas seulement son pelage.", "Tigre"],
+    ["Le rugissement du lion peut s'entendre jusqu'à 8 km.", "Lion"],
+    ["Les loutres se tiennent parfois la patte pour ne pas dériver en dormant sur l'eau.", "Loutre"],
+    ["Le hérisson peut porter jusqu'à environ 7000 piquants.", "Hérisson"],
+    ["Le paresseux ne descend de son arbre qu'environ une fois par semaine.", "Paresseux (mammifère)"],
+    ["L'axolotl est capable de régénérer certains de ses membres.", "Axolotl"],
+    ["La \"corne\" du narval est en réalité une dent très allongée.", "Narval"],
+    ["Une fourmi peut porter jusqu'à environ 50 fois son propre poids.", "Fourmi"],
+    ["Le papillon goûte les aliments avec ses pattes.", "Papillon"],
+    ["La libellule existe sous une forme proche depuis environ 300 millions d'années.", "Libellule"],
+    ["Le ver de terre possède plusieurs cœurs.", "Ver de terre"],
+    ["Chaque motif de rayures de zèbre est unique à l'individu.", "Zèbre"],
+    ["La corne du rhinocéros est faite de kératine, comme nos ongles.", "Rhinocéros"],
+    ["L'hippopotame peut retenir sa respiration plusieurs minutes sous l'eau.", "Hippopotame"],
+    ["Le hurlement d'un loup peut s'entendre à plusieurs kilomètres.", "Loup"],
+    ["Le renard a une ouïe assez fine pour repérer un rongeur sous la neige.", "Renard"],
+    ["La chouette peut tourner la tête à environ 270 degrés.", "Chouette"],
+    ["Certaines espèces de perroquet peuvent vivre plus de 80 ans.", "Perroquet"],
+    ["L'autruche est l'oiseau le plus rapide à la course.", "Autruche"],
+    ["L'abeille indique à ses congénères où trouver du nectar grâce à une sorte de danse.", "Abeille"],
+    ["Une coccinelle peut manger plusieurs milliers de pucerons au cours de sa vie.", "Coccinelle"],
+    ["Le dauphin dort en laissant un seul hémisphère de son cerveau actif à la fois.", "Dauphin (cétacé)"],
+    ["La baleine à bosse chante des mélodies qui peuvent durer plus de 20 minutes.", "Baleine à bosse"],
+    ["Le requin-baleine est le plus grand poisson du monde bien qu'il se nourrisse de plancton.", "Requin-baleine"],
+    ["Le crocodile ne peut pas tirer la langue hors de sa bouche.", "Crocodile"],
+    ["Le chameau peut boire plus de 100 litres d'eau en une seule fois.", "Chameau"],
+    ["Le pangolin est le seul mammifère entièrement recouvert d'écailles.", "Pangolin"],
+    ["La loutre de mer se sert parfois d'une pierre comme outil pour ouvrir des coquillages.", "Loutre de mer"],
+    ["Une journée sur Vénus dure plus longtemps qu'une année sur Vénus.", "Vénus (planète)"],
+    ["Une année sur Mercure ne dure que 88 jours terrestres.", "Mercure (planète)"],
+    ["Mars abrite le plus haut volcan connu du système solaire.", "Mars (planète)"],
+    ["Jupiter est la plus grande planète du système solaire.", "Jupiter (planète)"],
+    ["Les anneaux de Saturne sont composés en grande partie de glace.", "Saturne (planète)"],
+    ["Uranus tourne presque complètement sur le côté.", "Uranus (planète)"],
+    ["Neptune connaît certains des vents les plus violents du système solaire.", "Neptune (planète)"],
+    ["La Lune s'éloigne de la Terre d'environ 3,8 cm chaque année.", "Lune"],
+    ["Le Soleil représente à lui seul plus de 99% de la masse du système solaire.", "Soleil"],
+    ["La Voie lactée devrait entrer en collision avec la galaxie d'Andromède dans plusieurs milliards d'années.", "Voie lactée"],
+    ["Un trou noir a une gravité si forte que même la lumière ne peut s'en échapper.", "Trou noir"],
+    ["La lumière d'une étoile qu'on observe a parfois mis des milliers d'années à nous parvenir.", "Étoile"],
+    ["Une comète est principalement composée de glace et de poussière.", "Comète"],
+    ["La ceinture principale d'astéroïdes se situe entre Mars et Jupiter.", "Ceinture d'astéroïdes"],
+    ["Une aurore polaire apparaît quand des particules solaires entrent en collision avec l'atmosphère terrestre.", "Aurore polaire"],
+    ["Le système solaire s'est formé il y a environ 4,6 milliards d'années.", "Système solaire"],
+    ["Pluton a été reclassée en planète naine en 2006.", "Pluton (planète naine)"],
+    ["Une éclipse solaire se produit quand la Lune passe exactement entre la Terre et le Soleil.", "Éclipse solaire"],
+    ["Le Big Bang est la théorie qui décrit l'origine de l'univers, il y a environ 13,8 milliards d'années.", "Big Bang"],
+    ["La Station spatiale internationale fait le tour de la Terre environ toutes les 90 minutes.", "Station spatiale internationale"],
+    ["Le Groenland est couvert de glace à plus de 80%, malgré son nom.", "Groenland"],
+    ["Il y a environ 10 000 ans, le Sahara était une région verte et fertile.", "Sahara"],
+    ["Le Canada compte plus de lacs que tous les autres pays réunis.", "Canada"],
+    ["L'Everest est le plus haut sommet du monde au-dessus du niveau de la mer.", "Everest"],
+    ["Le Nil est l'un des plus longs fleuves du monde.", "Nil"],
+    ["La forêt amazonienne abrite une part importante de la biodiversité connue sur Terre.", "Forêt amazonienne"],
+    ["L'Antarctique est en réalité le plus grand désert du monde.", "Antarctique"],
+    ["L'Islande compte parmi les pays avec le plus de volcans actifs.", "Islande"],
+    ["Venise est construite sur plus d'une centaine de petites îles.", "Venise"],
+    ["La Cité du Vatican est le plus petit État du monde.", "Cité du Vatican"],
+    ["Le lac Baïkal est le lac le plus profond du monde.", "Lac Baïkal"],
+    ["La fosse des Mariannes est l'endroit le plus profond connu des océans.", "Fosse des Mariannes"],
+    ["Le Kilimandjaro est le plus haut sommet d'Afrique.", "Kilimandjaro"],
+    ["Le Grand Canyon a été creusé par le fleuve Colorado sur des millions d'années.", "Grand Canyon"],
+    ["Les îles Galápagos ont inspiré à Charles Darwin sa théorie de l'évolution.", "Galápagos"],
+    ["La mer Morte est si salée qu'on y flotte sans effort.", "Mer Morte"],
+    ["Le mont Fuji est le plus haut sommet du Japon.", "Mont Fuji"],
+    ["La Grande Barrière de corail est considérée comme la plus grande structure vivante au monde.", "Grande Barrière de corail"],
+    ["Les chutes du Niagara se trouvent à cheval entre le Canada et les États-Unis.", "Chutes du Niagara"],
+    ["Le Bhoutan cherche à mesurer le bien-être national plutôt que seulement la richesse économique.", "Bhoutan"],
+    ["La Nouvelle-Zélande compte largement plus de moutons que d'habitants.", "Nouvelle-Zélande"],
+    ["Monaco est l'un des pays les plus densément peuplés du monde.", "Monaco"],
+    ["La Russie est le plus grand pays du monde par sa superficie.", "Russie"],
+    ["Le Brésil abrite la majeure partie de la forêt amazonienne.", "Brésil"],
+    ["L'Australie est à la fois un pays et un continent.", "Australie"],
+    ["Madagascar abrite de nombreuses espèces qu'on ne trouve nulle part ailleurs.", "Madagascar"],
+    ["En Norvège, le soleil ne se couche pas pendant plusieurs semaines en été dans certaines régions.", "Norvège"],
+    ["Le Chili est l'un des pays les plus longs et les plus étroits du monde.", "Chili"],
+    ["Le mont Blanc est le plus haut sommet des Alpes.", "Mont Blanc"],
+    ["Les Alpes s'étendent sur plusieurs pays d'Europe.", "Alpes"],
+    ["Le cerveau humain consomme environ 20% de l'énergie du corps.", "Cerveau humain"],
+    ["L'ADN porte l'ensemble de l'information génétique d'un être vivant.", "ADN"],
+    ["La peau est le plus grand organe du corps humain.", "Peau"],
+    ["Le cœur bat en moyenne environ 100 000 fois par jour.", "Cœur"],
+    ["Le squelette humain compte environ 206 os à l'âge adulte.", "Squelette humain"],
+    ["Le système immunitaire nous protège des infections grâce à des cellules spécialisées.", "Système immunitaire"],
+    ["L'eau est l'une des rares substances présentes naturellement sous ses trois états sur Terre.", "Eau"],
+    ["Une grande partie de l'oxygène terrestre est produite par le phytoplancton océanique.", "Oxygène"],
+    ["Le carbone est à la base de toute forme de vie connue.", "Carbone"],
+    ["L'or est un métal si malléable qu'on peut l'étirer en fils extrêmement fins.", "Or"],
+    ["Le diamant est la substance naturelle la plus dure connue.", "Diamant"],
+    ["L'électricité était déjà étudiée dans l'Antiquité grâce à l'ambre frotté.", "Électricité"],
+    ["La gravitation est légèrement plus faible en altitude qu'au niveau de la mer.", "Gravitation"],
+    ["La photosynthèse permet aux plantes de transformer la lumière en énergie.", "Photosynthèse"],
+    ["Contrairement à beaucoup d'animaux, le corps humain ne peut pas fabriquer sa propre vitamine C.", "Vitamine C"],
+    ["Notre corps héberge un très grand nombre de bactéries.", "Bactérie"],
+    ["Un virus ne peut se reproduire qu'à l'intérieur d'une cellule hôte.", "Virus"],
+    ["La vaccination a permis d'éradiquer la variole à l'échelle mondiale.", "Vaccin"],
+    ["Le sommeil joue un rôle important dans la consolidation de la mémoire.", "Sommeil"],
+    ["Une empreinte digitale est unique à chaque individu, même chez les jumeaux.", "Empreinte digitale"],
+    ["Le globule rouge transporte l'oxygène dans tout le corps.", "Globule rouge"],
+    ["Le poumon droit est légèrement plus grand que le gauche.", "Poumon"],
+    ["Le rein filtre une grande quantité de sang chaque jour.", "Rein"],
+    ["L'œil humain permet de distinguer des millions de nuances de couleurs.", "Œil humain"],
+    ["Le plus petit muscle du corps humain se trouve dans l'oreille.", "Muscle"],
+    ["La tour Eiffel a été construite pour l'Exposition universelle de 1889.", "Tour Eiffel"],
+    ["Les pyramides de Gizeh sont les seules merveilles du monde antique encore debout aujourd'hui.", "Pyramides de Gizeh"],
+    ["La statue de la Liberté a été offerte par la France aux États-Unis.", "Statue de la Liberté"],
+    ["Le Colisée pouvait accueillir des dizaines de milliers de spectateurs dans la Rome antique.", "Colisée de Rome"],
+    ["La route de la soie reliait autrefois la Chine à l'Europe pour le commerce.", "Route de la soie"],
+    ["L'Empire romain a duré plusieurs siècles et influencé de nombreuses cultures.", "Empire romain"],
+    ["Léonard de Vinci était à la fois peintre, ingénieur et scientifique.", "Léonard de Vinci"],
+    ["Marie Curie est la seule personne à avoir reçu un prix Nobel dans deux sciences différentes.", "Marie Curie"],
+    ["Albert Einstein a formulé la théorie de la relativité.", "Albert Einstein"],
+    ["Johannes Gutenberg a popularisé l'imprimerie en Europe au XVe siècle.", "Johannes Gutenberg"],
+    ["La roue est considérée comme l'une des inventions les plus marquantes de l'humanité.", "Roue"],
+    ["Le papier a été inventé en Chine il y a environ 2000 ans.", "Papier"],
+    ["La boussole a d'abord été utilisée en Chine avant de se répandre à la navigation.", "Boussole"],
+    ["La poudre à canon a été inventée en Chine, à l'origine à d'autres fins.", "Poudre à canon"],
+    ["La Grande Muraille de Chine n'est pas visible à l'œil nu depuis l'espace, contrairement à une idée reçue.", "Grande Muraille de Chine"],
+    ["Christophe Colomb n'a jamais mis les pieds sur le continent nord-américain.", "Christophe Colomb"],
+    ["Napoléon n'était pas particulièrement petit pour son époque.", "Napoléon Ier"],
+    ["Cléopâtre a vécu chronologiquement plus proche du premier alunissage que de la construction des pyramides.", "Cléopâtre VII"],
+    ["Le Titanic a coulé lors de son tout premier voyage, en 1912.", "Titanic"],
+    ["La guerre froide a opposé les États-Unis et l'URSS sans conflit armé direct entre eux.", "Guerre froide"],
+    ["La Renaissance a été une période de grand renouveau artistique et scientifique en Europe.", "Renaissance (période historique)"],
+    ["Les Vikings ont exploré une partie de l'Amérique du Nord avant Christophe Colomb.", "Vikings"],
+    ["La Rome antique disposait déjà d'un système d'aqueducs sophistiqué.", "Rome antique"],
+    ["L'Égypte antique momifiait ses morts en croyant à une vie après la mort.", "Égypte antique"],
+    ["Jeanne d'Arc a mené des troupes françaises alors qu'elle était encore adolescente.", "Jeanne d'Arc"],
+    ["\"Wi-Fi\" ne veut techniquement rien dire — ce n'est pas un acronyme.", "Wi-Fi"],
+    ["Le tout premier courrier électronique a été envoyé en 1971.", "Courrier électronique"],
+    ["Internet est un réseau mondial d'ordinateurs interconnectés.", "Internet"],
+    ["Le GPS utilise des satellites en orbite pour calculer une position précise.", "Global Positioning System"],
+    ["Le velcro a été inventé en observant des graines de bardane accrochées à un pelage.", "Velcro"],
+    ["Le Post-it est né d'une colle jugée au départ trop peu efficace.", "Post-it"],
+    ["Le four à micro-ondes a été découvert presque par hasard grâce à un radar.", "Four à micro-ondes"],
+    ["Le tout premier code-barres a été scanné sur un paquet de chewing-gum.", "Code-barres"],
+    ["Le chewing-gum existe sous une forme ou une autre depuis des milliers d'années.", "Chewing-gum"],
+    ["Les méthodes de production du vin mousseux varient beaucoup d'une région à l'autre.", "Vin mousseux"],
+    ["Le chocolat était consommé comme boisson par plusieurs civilisations précolombiennes.", "Chocolat"],
+    ["Selon la légende, le café aurait été découvert grâce à des chèvres particulièrement énergiques.", "Café"],
+    ["Le thé est la deuxième boisson la plus consommée au monde après l'eau.", "Thé"],
+    ["Le sucre a longtemps été si précieux qu'on le gardait sous clé.", "Sucre"],
+    ["La pizza est née à Naples, en Italie.", "Pizza"],
+    ["Le croissant est associé à la France mais trouverait son origine en Autriche.", "Croissant (viennoiserie)"],
+    ["Le riz est l'aliment de base de plus de la moitié de la population mondiale.", "Riz"],
+    ["La pomme de terre est arrivée en Europe après la découverte de l'Amérique.", "Pomme de terre"],
+    ["La tomate a longtemps été crue toxique en Europe.", "Tomate"],
+    ["La vanille est l'une des épices les plus chères au monde.", "Vanille"],
+    ["La cannelle était autrefois plus précieuse que l'or dans certaines civilisations.", "Cannelle"],
+    ["Le sel a longtemps servi de monnaie d'échange dans l'histoire.", "Sel"],
+    ["Le papier toilette n'existe sous sa forme moderne que depuis la fin du XIXe siècle.", "Papier toilette"],
+    ["Le parapluie était à l'origine surtout utilisé contre le soleil, pas la pluie.", "Parapluie"],
+    ["L'horloge mécanique remonte au Moyen Âge en Europe.", "Horloge"],
+    ["L'alphabet latin est utilisé par une grande partie des langues du monde.", "Alphabet latin"],
+    ["L'espéranto a été créé pour être une langue internationale facile à apprendre.", "Espéranto"],
+    ["La langue française compte des mots issus de très nombreuses autres langues.", "Langue française"],
+    ["Les hiéroglyphes égyptiens forment un système d'écriture de l'Égypte antique.", "Hiéroglyphes égyptiens"],
+    ["Le mot \"émoji\" est d'origine japonaise.", "Émoji"],
+    ["L'origami est l'art traditionnel japonais du pliage de papier.", "Origami"],
+    ["La calligraphie est considérée comme un grand art dans plusieurs cultures d'Asie.", "Calligraphie"],
+    ["La mythologie grecque a inspiré de nombreux noms scientifiques encore utilisés aujourd'hui.", "Mythologie grecque"],
+    ["Le braille permet la lecture par le toucher pour les personnes non-voyantes.", "Braille"],
+    ["Le code Morse a permis de transmettre des messages à distance grâce à des signaux.", "Code Morse"],
+    ["Le jeu d'échecs trouverait son origine en Inde.", "Échecs"],
+    ["Le puzzle a été inventé à l'origine comme outil pédagogique de géographie.", "Puzzle"],
+    ["Le yoga est une pratique originaire d'Inde vieille de plusieurs millénaires.", "Yoga"],
+    ["Le sudoku est apparu sous sa forme moderne aux États-Unis avant de devenir populaire au Japon.", "Sudoku"],
+    ["Le carnaval de Rio est l'une des plus grandes fêtes populaires au monde.", "Carnaval de Rio de Janeiro"]
+  ];
+
+  function wikiUrl(slug){ return 'https://fr.wikipedia.org/wiki/' + slug.replace(/ /g, '_'); }
+
 
   var CATEGORY_PALETTE = [
     {bg:'#F0DCE1', fg:'#A8536B'},
@@ -492,6 +728,7 @@
       data.categories = ['Sport','Vie quotidienne','Loisir','Plaisir'];
     }
     if(!Array.isArray(data.todoLists)) data.todoLists = [];
+    if(!Array.isArray(data.customMoods)) data.customMoods = [];
   }
   normalizeData();
 
@@ -522,7 +759,22 @@
     return e;
   }
 
-  function getFrequency(h){ return h.frequency || { type:'daily', target:1 }; }
+  function getAllMoods(){ return MOODS.concat(data.customMoods || []); }
+
+  function addCustomMood(){
+    var label = prompt('Nom de la nouvelle humeur :');
+    if(!label || !label.trim()) return;
+    label = label.trim();
+    var emoji = prompt('Un emoji pour cette humeur (laisse vide pour ✨) :');
+    emoji = (emoji && emoji.trim()) ? emoji.trim() : '✨';
+    var id = normalizeCatName(label).replace(/\s+/g, '-');
+    if(getAllMoods().some(function(m){ return m.id === id; })){
+      id = id + '-' + Date.now().toString(36).slice(-4);
+    }
+    data.customMoods.push({ id: id, emoji: emoji, label: label });
+    saveData();
+    renderMoodChips();
+  }
 
   function freqLabel(f){
     f = f || { type:'daily', target:1 };
@@ -678,6 +930,14 @@
     renderRecap();
   }
 
+  function isHabitVisuallyChecked(h, entry){
+    var todayChecked = !!entry.checks[h.id];
+    var freq = getFrequency(h);
+    if(freq.type === 'daily') return todayChecked;
+    var badge = getHabitBadge(h);
+    return todayChecked || (badge && badge.met);
+  }
+
   function renderHabits(){
     var list = document.getElementById('habitList');
     var empty = document.getElementById('habitsEmpty');
@@ -685,6 +945,7 @@
     if(data.habits.length === 0){
       empty.hidden = false;
       list.hidden = true;
+      renderHome();
       return;
     }
     empty.hidden = true;
@@ -699,8 +960,8 @@
       header.textContent = getCategoryEmoji(cat) + ' ' + cat;
       list.appendChild(header);
       items.forEach(function(h){
-        var checked = !!entry.checks[h.id];
         var badge = getHabitBadge(h);
+        var checked = isHabitVisuallyChecked(h, entry);
         var row = document.createElement('div');
         row.className = 'habit-row' + (checked ? ' checked' : '');
         row.innerHTML =
@@ -716,7 +977,9 @@
         list.appendChild(row);
       });
     });
+    renderHome();
   }
+
 
   // ---- Journal editor ----
 
@@ -739,7 +1002,7 @@
     var container = document.getElementById('moodChips');
     var entry = ensureEntry(currentEditDate);
     container.innerHTML = '';
-    MOODS.forEach(function(m){
+    getAllMoods().forEach(function(m){
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'mood-chip' + (entry.mood === m.id ? ' selected' : '');
@@ -754,6 +1017,12 @@
       });
       container.appendChild(btn);
     });
+    var addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'mood-chip mood-chip-add';
+    addBtn.textContent = '+ Nouvelle';
+    addBtn.addEventListener('click', addCustomMood);
+    container.appendChild(addBtn);
   }
 
   function renderPositives(){
@@ -822,7 +1091,7 @@
   function buildHistoryFullHtml(e){
     var parts = [];
     if(e.mood){
-      var m = MOODS.filter(function(x){ return x.id === e.mood; })[0];
+      var m = getAllMoods().filter(function(x){ return x.id === e.mood; })[0];
       if(m) parts.push('<div class="hf-row"><strong>Humeur : </strong>' + m.emoji + ' ' + escapeHtml(m.label) + '</div>');
     }
     var pos = (e.positives||[]).filter(function(p){ return p && p.trim(); });
@@ -856,7 +1125,7 @@
     keys.forEach(function(k){
       var e = data.entries[k];
       var label = capitalize(formatFR(new Date(k + 'T00:00:00'), { weekday:'short', day:'numeric', month:'short' }));
-      var m = e.mood ? MOODS.filter(function(x){ return x.id === e.mood; })[0] : null;
+      var m = e.mood ? getAllMoods().filter(function(x){ return x.id === e.mood; })[0] : null;
       var moodEmoji = m ? m.emoji : '';
       var previewSource = (e.journal && e.journal.trim()) ? e.journal : ((e.braindump && e.braindump.trim()) ? e.braindump : '');
       var preview = previewSource ? (previewSource.slice(0,36) + (previewSource.length > 36 ? '…' : '')) : 'Pas de texte, mais un peu de toi quand même.';
@@ -995,7 +1264,7 @@
     var counts = computeMonthMoodCounts(year, monthIndex, totalDays);
     var container = document.getElementById('moodRecap');
     container.innerHTML = '';
-    var entries = MOODS.map(function(m){ return { m:m, count: counts[m.id]||0 }; }).filter(function(x){ return x.count>0; });
+    var entries = getAllMoods().map(function(m){ return { m:m, count: counts[m.id]||0 }; }).filter(function(x){ return x.count>0; });
     entries.sort(function(a,b){ return b.count - a.count; });
     if(entries.length === 0){
       container.innerHTML = '<p class="muted">Pas encore d\'humeur enregistrée ce mois-ci.</p>';
@@ -1243,6 +1512,7 @@
         h.linkedToJournal = !h.linkedToJournal;
         saveData();
         renderSettings();
+        if(h.linkedToJournal){ syncJournalLinkedHabits(todayKey()); }
       });
       row.querySelector('.delete-btn').addEventListener('click', function(){ deleteHabit(h.id); });
       list.appendChild(row);
@@ -1377,6 +1647,32 @@
 
   document.getElementById('goToSettingsLink').addEventListener('click', function(){ switchView('settings'); });
 
+  // ---- Accueil ----
+
+  function renderHome(){
+    var entry = ensureEntry(todayKey());
+    var total = data.habits.length;
+    var done = 0;
+    data.habits.forEach(function(h){ if(isHabitVisuallyChecked(h, entry)) done++; });
+    var numberEl = document.getElementById('homeStatNumber');
+    var labelEl = document.getElementById('homeStatLabel');
+    if(total === 0){
+      numberEl.textContent = '—';
+      labelEl.textContent = "Ajoute une habitude pour commencer";
+    } else {
+      numberEl.textContent = done + '/' + total;
+      labelEl.textContent = "habitude" + (total>1?'s':'') + " faite" + (done>1?'s':'') + " aujourd'hui";
+    }
+    var factIdx = dayOfYear(new Date()) % FUN_FACTS.length;
+    var fact = FUN_FACTS[factIdx];
+    document.getElementById('funFactText').textContent = fact[0];
+    document.getElementById('funFactLink').href = wikiUrl(fact[1]);
+  }
+
+  document.querySelectorAll('.home-nav-card').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchView(btn.dataset.goto); });
+  });
+
   // ---- Tabs ----
 
   var tabButtons = document.querySelectorAll('.tab-btn');
@@ -1402,17 +1698,6 @@
     updateExportBadge();
   }
 
-  document.getElementById('tipClose').addEventListener('click', function(){
-    localStorage.setItem(TIP_KEY, '1');
-    document.getElementById('tipBanner').hidden = true;
-  });
-
-  function initTip(){
-    if(!localStorage.getItem(TIP_KEY)){
-      document.getElementById('tipBanner').hidden = false;
-    }
-  }
-
   // ---- Init ----
 
   function renderAll(){
@@ -1427,7 +1712,6 @@
   }
 
   renderAll();
-  initTip();
 })();
 </script>
 </body>
