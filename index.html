@@ -82,7 +82,7 @@
   .tip-banner{ margin: 10px 20px 4px; background: var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:13.5px; line-height:1.5; display:flex; gap:10px; align-items:flex-start; color: var(--ink-soft); }
   .tip-banner button{ background:none; border:none; color:var(--ink-soft); font-size:18px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0; }
 
-  main{ flex:1; padding: 4px 20px 70px; overflow-y:auto; }
+  main{ flex:1; padding: 4px 20px 78px; overflow-y:auto; }
   .view{ display:none; }
   .view.active{ display:block; animation: fadein .2s ease; }
   @keyframes fadein{ from{opacity:0} to{opacity:1} }
@@ -234,7 +234,7 @@
   .help-text{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; }
   .muted{ color:var(--ink-soft); font-size:14px; }
 
-  nav.tabbar{ position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; background: var(--surface); border-top:1px solid var(--line); padding: 4px 0 calc(4px + env(safe-area-inset-bottom)); max-width:480px; margin:0 auto; }
+  nav.tabbar{ position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; background: var(--surface); border-top:1px solid var(--line); padding: 4px 0 calc(12px + env(safe-area-inset-bottom)); max-width:480px; margin:0 auto; }
   .tab-btn{ background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:1px; color: var(--ink-soft); font-size:8.5px; padding:1px 2px; cursor:pointer; }
   .tab-icon-wrap{ display:flex; align-items:center; justify-content:center; width:28px; height:22px; border-radius:11px; transition: background-color .2s ease; }
   .tab-btn svg{ width:16px; height:16px; transition: transform .15s ease; }
@@ -803,6 +803,8 @@
     saveData();
     renderMoodChips();
   }
+
+  function getFrequency(h){ return h.frequency || { type:'daily', target:1 }; }
 
   function freqLabel(f){
     f = f || { type:'daily', target:1 };
