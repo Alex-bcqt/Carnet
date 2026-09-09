@@ -404,6 +404,12 @@
       </div>
 
       <div class="settings-block">
+        <div class="section-title">Catégories</div>
+        <div id="categoryList"></div>
+        <p class="help-text">Supprimer une catégorie déplace ses habitudes et objectifs vers « Sans catégorie ».</p>
+      </div>
+
+      <div class="settings-block">
         <div class="section-title">Données</div>
         <button class="action-btn" id="exportBtn" type="button">Exporter mes données (JSON)</button>
         <p class="help-text">Télécharge un fichier avec toutes tes habitudes et ton journal. Garde-le quelque part si tu veux une sauvegarde ou si tu changes de téléphone.</p>
@@ -719,7 +725,8 @@
     'spiritualite': '🕊️',
     'etude': '📖', 'etudes': '📖', 'cours': '📖',
     'these': '🎓', 'recherche': '🎓',
-    'beaute': '💅', 'skincare': '💅'
+    'beaute': '💅', 'skincare': '💅',
+    'cinema': '🎬', 'film': '🎬', 'films': '🎬', 'serie': '🎬', 'series': '🎬'
   };
 
   function normalizeCatName(s){
@@ -757,6 +764,10 @@
     if(!Array.isArray(data.todoLists)) data.todoLists = [];
     if(!Array.isArray(data.customMoods)) data.customMoods = [];
     if(!Array.isArray(data.goals)) data.goals = [];
+    if(!data.addedCinemaCategory){
+      if(data.categories.indexOf('Cinéma') === -1){ data.categories.push('Cinéma'); }
+      data.addedCinemaCategory = true;
+    }
   }
   normalizeData();
 
@@ -1625,6 +1636,42 @@
     });
   }
 
+  function deleteCategory(cat){
+    var affected = data.habits.filter(function(h){ return h.category === cat; }).length +
+                   data.goals.filter(function(g){ return g.category === cat; }).length;
+    var msg = 'Supprimer la catégorie « ' + cat + ' » ?';
+    if(affected > 0) msg += ' ' + affected + ' élément(s) seront déplacés vers « Sans catégorie ».';
+    if(!confirm(msg)) return;
+    data.categories = data.categories.filter(function(c){ return c !== cat; });
+    data.habits.forEach(function(h){ if(h.category === cat) h.category = 'Sans catégorie'; });
+    data.goals.forEach(function(g){ if(g.category === cat) g.category = 'Sans catégorie'; });
+    saveData();
+    renderCategoryList();
+    populateCategorySelect();
+    renderHabits();
+    renderGoals();
+    renderRecap();
+    renderSettings();
+  }
+
+  function renderCategoryList(){
+    var list = document.getElementById('categoryList');
+    list.innerHTML = '';
+    if(data.categories.length === 0){
+      list.innerHTML = '<p class="muted">Aucune catégorie pour l\'instant.</p>';
+      return;
+    }
+    data.categories.forEach(function(cat){
+      var row = document.createElement('div');
+      row.className = 'settings-row';
+      row.innerHTML =
+        '<span class="settings-row-name">' + getCategoryEmoji(cat) + ' ' + escapeHtml(cat) + '</span>' +
+        '<button class="delete-btn" type="button" aria-label="Supprimer la catégorie ' + escapeHtml(cat) + '">×</button>';
+      row.querySelector('.delete-btn').addEventListener('click', function(){ deleteCategory(cat); });
+      list.appendChild(row);
+    });
+  }
+
   function populateCategorySelect(){
     ['habitCategory', 'goalCategory'].forEach(function(selId){
       var sel = document.getElementById(selId);
@@ -1820,6 +1867,7 @@
     loadEditorForDate(currentEditDate);
     renderTodos();
     renderSettings();
+    renderCategoryList();
     renderRecap();
   }
 
